@@ -87,6 +87,9 @@ class UserController {
   static async adminRegister(req, res) {
     try {
       const { adminName, adminPassword } = req.body;
+      if (adminName === '' || adminPassword === ''){
+        throw {msg: 'Name and password is required'}
+      }
       const newAdmin = await Admin.create({
         name: adminName,
         password: adminPassword,
@@ -127,7 +130,7 @@ class UserController {
   }
   static async getAlumni(req, res) {
     try {
-      const alumniList = Alumni.findAll({
+      const alumniList = await Alumni.findAll({
         attributes: {
           exclude: ["updatedAt", "createdAt"],
         },

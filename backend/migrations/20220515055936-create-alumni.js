@@ -23,12 +23,12 @@ module.exports = {
       nik: {
         allowNull: false,
         unique: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       nim: {
         allowNull: false,
         unique: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       address: {
         allowNull: false,
@@ -44,7 +44,7 @@ module.exports = {
       },
       telephone_number: {
         allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       year_id: {
         allowNull: false,

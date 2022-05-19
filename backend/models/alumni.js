@@ -1,6 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
-const year = require("./year");
+const { createHash } = require("../helpers/bcrypt");
 module.exports = (sequelize, DataTypes) => {
   class Alumni extends Model {
     /**
@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Alumni.belongsTo(models.Alumni, { foreignKey: "major_id" });
+      Alumni.belongsTo(models.Major, { foreignKey: "major_id" });
       Alumni.belongsTo(models.Year, { foreignKey: "year_id" });
       Alumni.belongsTo(models.Role, { foreignKey: "role_id" });
       Alumni.belongsToMany(models.Question, { through: models.Answer });
@@ -50,22 +50,30 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       nik: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         unique: { args: true, msg: "Incorrect NIK" },
         allowNull: false,
         validate: {
           notNull: {
             msg: "Please enter your NIK",
           },
+          len: {
+            args: [16],
+            msg: "NIK incorrect, minimum length is 16",
+          },
         },
       },
       nim: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         unique: { args: true, msg: "Incorrect NIM" },
         allowNull: false,
         validate: {
           notNull: {
             msg: "Please enter your NIM",
+          },
+          len: {
+            args: [10],
+            msg: "NIM incorrect, minimum length is 10",
           },
         },
       },
@@ -88,7 +96,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       telephone_number: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notNull: {
@@ -112,5 +120,9 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Alumni",
     }
   );
+  Alumni.beforeCreate((alumni, option) => {
+    const newPassword = createHash(alumni.password);
+    alumni.password = newPassword;
+  });
   return Alumni;
 };

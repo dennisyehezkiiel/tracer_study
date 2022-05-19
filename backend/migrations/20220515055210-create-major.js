@@ -12,6 +12,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      major_id: Sequelize.INTEGER,
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -24,5 +25,6 @@ module.exports = {
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Majors');
+    await queryInterface.removeColumn("Majors", major_id)
   }
 };
